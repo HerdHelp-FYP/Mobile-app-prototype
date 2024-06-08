@@ -1,0 +1,22 @@
+# Ensure that all text files are normalized and use LF line endings
+* text=auto
+
+# Windows-specific files
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Linux-specific files
+*.sh text eol=lf
+
+# Other specific configurations
+*.cpp text eol=lf
+*.h text eol=lf
+*.cs text eol=lf
+*.swift text eol=lf
+
+# Exclude binary files from line-ending normalization
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary

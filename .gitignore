@@ -1,6 +1,11 @@
 # Flutter
 **/build/
 **/ios/
+**/linux/
+**/macos/
+**/test/
+**/web/
+**/windows/
 **/.flutter-plugins
 **/.dart_tool/
 **/.package

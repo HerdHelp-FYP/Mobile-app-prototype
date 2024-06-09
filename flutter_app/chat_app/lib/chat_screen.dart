@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:async';
+import 'network_util.dart'; // Import the utility class
 
 // Chat model for storing messages
 class ChatMessage {
@@ -20,9 +20,10 @@ class ChatProvider with ChangeNotifier {
 
   Future<void> sendMessage(String prompt, String sessionId) async {
     try {
+      // Fetch the server URL using the utility function
+      String serverUrl = await NetworkUtil.getServerUrl();
       final response = await http.post(
-        // Use your local IP or ngrok URL here
-        Uri.parse('http://192.168.50.150:5000/api/query'),
+        Uri.parse('$serverUrl/api/query'), // Use the fetched server URL
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'prompt': prompt, 'session_id': sessionId}),
       );

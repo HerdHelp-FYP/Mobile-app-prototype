@@ -86,18 +86,20 @@ def api_query():
     user_prompt = prompt
     prompt = prompt
     # Perform translation if needed
-    # Translator = googletrans.Translator()
-    # translation = Translator.translate(prompt, src='ur', dest='en')
-    # prompttr = translation.text
+    Translator= googletrans.Translator()
+    translation = Translator.translate(prompt, src='ur', dest='en')
+    prompttr = translation.text
     
     # # User's prompt translation
-    # Translator = googletrans.Translator()
-    # translation = Translator.translate(user_prompt, src='ur', dest='en')
-    # prompttr_user = translation.text
+    Translator= googletrans.Translator()
+    translation = Translator.translate(prompt, src='ur', dest='en')
+    prompttr_user = translation.text
+    
+    print("user prompt translation = ", prompttr)
     
     # RAG context retrieval
-    # quer = prompttr_user
-    quer = prompt
+    quer = prompttr_user
+    # quer = prompt
     res = vectorstore.similarity_search(
         quer,  # the search query
         k=1  # returns top 3 most relevant chunks of text
@@ -106,11 +108,13 @@ def api_query():
     concatenated_content = ""
     for document in res:
         concatenated_content += document.page_content + ' '
+        
+    print("concatenated context = ", concatenated_content)
 
     # Query the model
     output = query({
         # "inputs": sys_prompt + " Here is some relevant context, " + concatenated_content + " question " + prompttr_user + " Now generate answer : ",
-        "inputs": sys_prompt + " Here is some relevant context, " + concatenated_content + " question " + prompt + " Now generate answer : ",
+        "inputs": sys_prompt + " Here is some relevant context, " + concatenated_content + " question " + prompttr_user + " Now generate answer :- ",
         "parameters": {"max_new_tokens": 250, "repetition_penalty": 7.0},
         "options": {"wait_for_model": True}
     })
@@ -119,23 +123,31 @@ def api_query():
     print("Output = ", output)
 
     # Use regex to find the text after the asterisk (*)
-    match = re.search(r':(.*)', output)
+    # Using re.DOTALL to include newlines
+    pattern = re.compile(r':-\s*(.*)', re.DOTALL)
+
+    # Search for the pattern in the text
+    match = pattern.search(output)
     if match:
         output = match.group(1)
+        
+    print("Output after regex = ", output)
 
     # Translate the response back to Urdu
     # translation = Translator.translate(output, src='en', dest='ur')
-    # response = translation.text
+    Translator= googletrans.Translator()
+    translation = Translator.translate(output, src='en', dest='ur')
+    response = translation.text
 
     # Update the chat session
     session_id = data.get('session_id')
-    # chat_sessions[session_id] = chat_sessions.get(session_id, []) + [(prompt, response)]
-    chat_sessions[session_id] = chat_sessions.get(session_id, []) + [(prompt, output)]
+    chat_sessions[session_id] = chat_sessions.get(session_id, []) + [(prompt, response)]
+    # chat_sessions[session_id] = chat_sessions.get(session_id, []) + [(prompt, output)]
 
     # Prepare the response data
     response_data = {
-        # 'response': response
-        'response': output
+        'response': response
+        # 'response': output
     }
 
     # Return the response data as JSON

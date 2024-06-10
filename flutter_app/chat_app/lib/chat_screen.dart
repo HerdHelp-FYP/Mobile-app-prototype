@@ -53,14 +53,21 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final String sessionId = '1111';  // Example session ID
+  final String sessionId = '1111'; // Example session ID
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat with Vet'),
+        title: Text(
+          'ویٹ کے ساتھ چیٹ کریں',
+          style: TextStyle(
+            color: Color(0xFFE0E0E0), // Light gray color for the text
+          ),
+        ),
+        backgroundColor: Color(0xFF2C2C2C), // Dark gray app bar
       ),
+      backgroundColor: Color(0xFF2C2C2C), // Dark gray background
       body: Column(
         children: [
           Expanded(
@@ -72,16 +79,27 @@ class _ChatScreenState extends State<ChatScreen> {
                     final message = chatProvider.messages[index];
                     return ListTile(
                       title: Align(
-                        alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
+                        alignment: message.isUser
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
                         child: Container(
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: message.isUser ? Colors.blue : Colors.grey[300],
+                            color: message.isUser
+                                ? Color(
+                                    0xFF4DF9DA) // Turquoise for user messages
+                                : Color(
+                                    0xFF626262), // Medium gray for bot messages
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
                             message.message,
-                            style: TextStyle(color: message.isUser ? Colors.white : Colors.black),
+                            style: TextStyle(
+                                color: message.isUser
+                                    ? Colors
+                                        .black // Black text for user messages
+                                    : Colors
+                                        .white), // White text for bot messages
                           ),
                         ),
                       ),
@@ -99,15 +117,25 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: TextField(
                     controller: _controller,
                     decoration: InputDecoration(
-                      hintText: 'Type your message here...',
+                      hintText: 'اپنا پیغام یہاں ٹائپ کریں...',
+                      fillColor: Color(0xFF626262), // Medium gray input field
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                      hintStyle: TextStyle(color: Colors.white),
                     ),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: Icon(Icons.send,
+                      color: Color(0xFF4DF9DA)), // Turquoise send icon
                   onPressed: () async {
                     if (_controller.text.isNotEmpty) {
-                      await Provider.of<ChatProvider>(context, listen: false).sendMessage(_controller.text, sessionId);
+                      await Provider.of<ChatProvider>(context, listen: false)
+                          .sendMessage(_controller.text, sessionId);
                       _controller.clear();
                     }
                   },

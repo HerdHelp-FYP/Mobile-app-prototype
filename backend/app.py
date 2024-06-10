@@ -46,8 +46,15 @@ vectorstore = Pinecone(
 )
 # RAG setup end
 
-API_URL = "https://api-inference.huggingface.co/models/ahmed807762/gemma-2b-vetdataset-finetuned"
-headers = {"Authorization": "Bearer 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"}
+# API_URL = "https://api-inference.huggingface.co/models/ahmed807762/gemma-2b-vetdataset-finetuned"
+# headers = {"Authorization": "Bearer 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"}
+
+API_URL = "https://sgug98576vup3s5p.us-east-1.aws.endpoints.huggingface.cloud"
+headers = {
+	"Accept" : "application/json",
+	"Authorization": "Bearer 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",
+	"Content-Type": "application/json" 
+}
 
 API_URL1 = "https://api-inference.huggingface.co/models/ihanif/whisper-medium-urdu"
 headers1 = {"Authorization": "Bearer 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"}
